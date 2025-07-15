@@ -54,6 +54,7 @@ Cloud SQL DBs → Data Extraction → GCS Data Lake → Data Processing → Tabl
   API Reviews                                    Gold Layer
                                               (Business Ready)
 ```
+![Retail De project architecture](project-architecture.svg "Architecure Diagram")
 
 ### Data Processing Layers
 
