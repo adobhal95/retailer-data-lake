@@ -1,0 +1,3 @@
+database,datasource,tablename,loadtype,watermark,is_active,targetpath
+supplier_db,cloudsql-supplier,suppliers,Full Load,created_at,1,landing/supplier-db/supplier
+supplier_db,cloudsql-supplier,product_suppliers,Incremental,last_updated,1,landing/supplier-db/supplier
