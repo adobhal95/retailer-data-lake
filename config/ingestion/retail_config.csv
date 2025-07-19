@@ -1,6 +1,0 @@
-database,datasource,tablename,loadtype,watermark,is_active,targetpath
-retailer_db,cloudsql-retailer,products,Full Load,,1,landing/retailer-db/products
-retailer_db,cloudsql-retailer,categories,Full Load,,1,landing/retailer-db/categories
-retailer_db,cloudsql-retailer,customers,Incremental,updated_at,1,landing/retailer-db/customers
-retailer_db,cloudsql-retailer,orders,Incremental,updated_at,1,landing/retailer-db/orders
-retailer_db,cloudsql-retailer,order_items,Incremental,updated_at,1,landing/retailer-db/order_items

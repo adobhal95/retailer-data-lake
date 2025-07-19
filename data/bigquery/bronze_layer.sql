@@ -1,5 +1,7 @@
 -- change dataset name according to your project
 -- This script creates external tables in the Bronze layer of the data warehouse
+-- change dataset name according to your project
+-- This script creates external tables in the Bronze layer of the data warehouse
 
 CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.orders`(
     order_id INT64,
