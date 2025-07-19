@@ -11,7 +11,7 @@ gcloud config set project $PROJECT-ID
 # create two instances named cloudsql-retailer and cloudsql-supplier
 gcloud sql instances create INSTANCE-NAME \
   --database-version=POSTGRES_14 \
-  --region=asia-south1 \
+  --region=asia-south2 \
   --tier=db-custom-2-20480 \
   --storage-size=20GB \
   --storage-type=SSD \
