@@ -11,7 +11,6 @@ This project implements a scalable data lake architecture that ingests data from
 - **Database**: Google Cloud SQL (PostgreSQL)
 - **Data Lake Storage**: Google Cloud Storage (GCS)
 - **Orchestration**: Cloud Composer
-- **Visualization**: Tableau
 
 ## 🎯 Why a Data Lake?
 
@@ -48,6 +47,7 @@ Contains supplier-related information:
 
 ### 3. API Reviews (`api-reviews`)
 
+Here we will mock the api using [mock.io](https://mockapi.io/) service
 Captures customer feedback from external sources:
 
 - `customer_reviews`
@@ -71,21 +71,17 @@ Cloud SQL DBs → Data Extraction → GCS Data Lake → Data Processing → Tabl
 
 Once extracted, the data is landed into Google Cloud Storage (GCS) under separate folders:
 
-- `gs://bucket-name/bronze/retailer-db/` - Raw retailer data
-- `gs://bucket-name/bronze/supplier-db/` - Raw supplier data
-- `gs://bucket-name/bronze/customer-reviews/` - Raw reviews data
+- `gs://bucket-name/landing/retailer-db/` - Raw retailer data
+- `gs://bucket-name/landing/supplier-db/` - Raw supplier data
+- `gs://bucket-name/landing/customer-reviews/` - Raw reviews data
 
-#### 2. Data Processing in GCS (Medallion Architecture)
+#### 2. Data Processing in BIGQUERY (Medallion Architecture)
 
-The data is processed through three layers stored in GCS:
+The data is processed through three layers stored in Bigquery:
 
-- **Bronze Layer** (`gs://bucket-name/bronze/`): Raw data from Cloud SQL and APIs stored as-is
-- **Silver Layer** (`gs://bucket-name/silver/`): Data cleaned, standardized, and transformed for improved quality
-- **Gold Layer** (`gs://bucket-name/gold/`): Final business-ready datasets optimized for analytics
-
-#### 3. Visualization in Tableau
-
-Business intelligence dashboards and reports generated from gold-layer datasets
+- **Bronze Layer** (`project-id.bronze.table-name`): Raw data from Cloud SQL and APIs stored as-is
+- **Silver Layer** (`project-id.silver.table-name`): Data cleaned, standardized, and transformed for improved quality
+- **Gold Layer** (`project-id.gold.table-name`): Final business-ready datasets optimized for analytics
 
 #### 4. Workflow Orchestration with Airflow
 
@@ -111,13 +107,9 @@ retailer-data-lake/
 ## 🛠️ Prerequisites
 
 - Python 3.8+
-- Google Cloud Platform account with the following APIs enabled:
-  - Cloud SQL Admin API
-  - Cloud Storage API
-  - Cloud Resource Manager API
-- Google Cloud SQL instances (retailer & supplier databases)
-- Tableau Desktop/Server license
-- Apache Airflow environment
+- Google Cloud Platform account with the APIs enabled.
+- Google Cloud SQL instances (retailer & supplier databases).
+- Google Dataproc cluster
 
 ## ⚙️ Quick Start
 
@@ -132,45 +124,24 @@ cd retailer-data-lake
 
 ### Daily Data Ingestion
 
-1. **Extract** data from Cloud SQL databases and APIs
-2. **Load** raw data to GCS bronze layer in parquet format
+1. **Extract** data from Cloud SQL databases and APIs to gcs datalake.
+2. **Load** raw data to bigquery bronze layer in json/parquet format(depending on table).
+
+   a. Here while loading data, I've used incremental or full load data strategy based on the table type. If table data changes frequently will incremental load the table based on the latest checkpoint. If table's data changes less frequently we can fully load the data.
+
 3. **Transform** data through silver layer (cleaning and validation)
 4. **Aggregate** data in gold layer for business consumption
-5. **Update** Tableau data sources
-
-### Data Quality Checks
-
-- Schema validation at bronze layer
-- Data type consistency at silver layer
-- Business rule validation at gold layer
-- Automated alerts for data anomalies
-
-## 📊 Available Dashboards
-
-### Pre-built Tableau Dashboards
-
-- **Sales Performance Dashboard**
-
-  - Revenue trends and KPIs
-  - Product performance metrics
-  - Regional sales analysis
-
-- **Customer Analytics Dashboard**
-
-  - Customer segmentation
-  - Purchase behavior analysis
-  - Customer lifetime value
-
-- **Supplier Performance Dashboard**
-  - Supplier reliability metrics
-  - Cost analysis
-  - Delivery performance
 
 ## 🚀 Deployment Options
 
+1. For learning purpose first we will eeploy each services manually. Go through the [config]("../config/main_instructions.md") folder for further instructions.
+2. For managed deployment, will be using cloud composer and cloud build.
+   a. Cloud Composer to run dags.
+   b. Cloud Build to push the changes made in code (CI/CD).
+
 ### Google Cloud Deployment
 
-- Google Cloud Composer for Airflow
-- Cloud SQL for operational databases
-- Cloud Storage for data lake
-- Tableau Server for BI
+- Google Cloud Composer for Airflow.
+- Cloud SQL for operational databases.
+- Cloud Storage for data lake.
+- Google Cloud Dataproc for managed apache spark service.
