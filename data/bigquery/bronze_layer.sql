@@ -3,7 +3,7 @@
 -- change dataset name according to your project
 -- This script creates external tables in the Bronze layer of the data warehouse
 
-CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.orders`(
+CREATE EXTERNAL TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.bronze.orders`(
     order_id INT64,
     customer_id INT64,
     order_date STRING,
@@ -15,7 +15,7 @@ OPTIONS (
   uris = ['gs://retailer-datalake/landing/retailer-db/orders/*.json']
 );
 
-CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.customers`
+CREATE EXTERNAL TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.bronze.customers`
 (
     customer_id INT64,
     name STRING,
@@ -27,7 +27,7 @@ OPTIONS (
     uris = ['gs://retailer-datalake/landing/retailer-db/customers/*.json']
 );
 
-CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.products`
+CREATE EXTERNAL TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.bronze.products`
 (
     product_id INT64,
     name STRING,
@@ -40,7 +40,7 @@ OPTIONS (
     uris = ['gs://retailer-datalake/landing/retailer-db/products/*.json']
 );
 
-CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.categories`
+CREATE EXTERNAL TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.bronze.categories`
 (
     category_id INT64,
     name STRING,
@@ -51,7 +51,7 @@ OPTIONS (
     uris = ['gs://retailer-datalake/landing/retailer-db/categories/*.json']
 );
 
-CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.order_items`
+CREATE EXTERNAL TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.bronze.order_items`
 (
     order_item_id INT64,
     order_id INT64,
@@ -66,7 +66,7 @@ OPTIONS (
 );
 -------------------------------------------------------------------------------------------------------------
 -- Suppliers Table
-CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.suppliers` (
+CREATE EXTERNAL TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.bronze.suppliers` (
     supplier_id INT64,
     supplier_name STRING,
     contact_name STRING,
@@ -83,7 +83,7 @@ OPTIONS (
 );
 
 -- Product Suppliers Table (Mapping suppliers to products)
-CREATE EXTERNAL TABLE IF NOT EXISTS `x-signifier-461105-s6.bronze.product_suppliers` (
+CREATE EXTERNAL TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.bronze.product_suppliers` (
     supplier_id INT64,
     product_id INT64,
     supply_price FLOAT64,
@@ -96,7 +96,7 @@ OPTIONS (
 
 -------------------------------------------------------------------------------------------------------------
 
-CREATE OR REPLACE EXTERNAL TABLE `x-signifier-461105-s6.bronze.customer_reviews` (
+CREATE OR REPLACE EXTERNAL TABLE `<YOUR-PROJECT-ID>.bronze.customer_reviews` (
   id STRING,
   customer_id INT64,
   product_id INT64,
