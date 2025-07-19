@@ -30,7 +30,7 @@ CONFIG_FILE_PATH = f"gs://{GCS_BUCKET}/configs/retail_config.csv"
 
 
 # bigquery configuration
-BIGQUERY_PROJECT = "x-signifier-461105-s6"
+BIGQUERY_PROJECT = "<YOUR-PROJECT-ID>"
 BQ_AUDIT_TABLE = f"{BIGQUERY_PROJECT}.temp_dataset.audit_log"
 BQ_PIPELINE_LOGS = f"{BIGQUERY_PROJECT}.temp_dataset.pipeline_logs"
 BQ_TEMP_PATH = f"{GCS_BUCKET}/temp/"

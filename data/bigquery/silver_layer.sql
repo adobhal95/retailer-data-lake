@@ -1,5 +1,5 @@
 --Create the customers Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.customers`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.customers`
 (
     customer_id INT64,
     name STRING,
@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.customers`
 
 
 --Update Existing Active Records if There Are Changes
-MERGE INTO  `x-signifier-461105-s6.silver.customers` target
+MERGE INTO  `<YOUR-PROJECT-ID>.silver.customers` target
 USING 
   (SELECT DISTINCT
     *, 
@@ -24,7 +24,7 @@ USING
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     True as is_active
-  FROM `x-signifier-461105-s6.bronze.customers`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.customers`) source
 ON target.customer_id = source.customer_id AND target.is_active = true
 WHEN MATCHED AND 
             (
@@ -36,7 +36,7 @@ WHEN MATCHED AND
         target.effective_end_date = current_timestamp();
 
 --Insert New or Updated Records
-MERGE INTO  `x-signifier-461105-s6.silver.customers` target
+MERGE INTO  `<YOUR-PROJECT-ID>.silver.customers` target
 USING 
   (SELECT DISTINCT
     *, 
@@ -47,7 +47,7 @@ USING
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     True as is_active
-  FROM `x-signifier-461105-s6.bronze.customers`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.customers`) source
 ON target.customer_id = source.customer_id AND target.is_active = true
 WHEN NOT MATCHED THEN 
     INSERT (customer_id, name, email, updated_at, is_quarantined, effective_start_date, effective_end_date, is_active)
@@ -55,7 +55,7 @@ WHEN NOT MATCHED THEN
 
 
 --Create the orders Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.orders`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.orders`
 (
     order_id INT64,
     customer_id INT64,
@@ -68,14 +68,14 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.orders`
 );
 
 --Update Existing Active Records if There Are Changes
-MERGE INTO `x-signifier-461105-s6.silver.orders` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.orders` target
 USING 
   (SELECT DISTINCT
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.orders`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.orders`) source
 ON target.order_id = source.order_id AND target.is_active = true
 WHEN MATCHED AND 
             (
@@ -89,21 +89,21 @@ WHEN MATCHED AND
         target.effective_end_date = current_timestamp();
 
 --Insert New or Updated Records
-MERGE INTO `x-signifier-461105-s6.silver.orders` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.orders` target
 USING 
   (SELECT DISTINCT
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.orders`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.orders`) source
 ON target.order_id = source.order_id AND target.is_active = true
 WHEN NOT MATCHED THEN 
     INSERT (order_id, customer_id, order_date, total_amount, updated_at, effective_start_date, effective_end_date, is_active)
     VALUES (source.order_id, source.customer_id, source.order_date, source.total_amount, source.updated_at, source.effective_start_date, source.effective_end_date, source.is_active);
 
 --Create the order_items Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.order_items`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.order_items`
 (
     order_item_id INT64,
     order_id INT64,
@@ -117,14 +117,14 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.order_items`
 );
 
 --Update Existing Active Records if There Are Changes
-MERGE INTO `x-signifier-461105-s6.silver.order_items` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.order_items` target
 USING 
   (SELECT DISTINCT
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.order_items`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.order_items`) source
 ON target.order_item_id = source.order_item_id AND target.is_active = true
 WHEN MATCHED AND 
             (
@@ -139,21 +139,21 @@ WHEN MATCHED AND
         target.effective_end_date = current_timestamp();
 
 --Insert New or Updated Records
-MERGE INTO `x-signifier-461105-s6.silver.order_items` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.order_items` target
 USING 
   (SELECT DISTINCT
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.order_items`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.order_items`) source
 ON target.order_item_id = source.order_item_id AND target.is_active = true
 WHEN NOT MATCHED THEN 
     INSERT (order_item_id, order_id, product_id, quantity, price, updated_at, effective_start_date, effective_end_date, is_active)
     VALUES (source.order_item_id, source.order_id, source.product_id, source.quantity, source.price, source.updated_at, source.effective_start_date, source.effective_end_date, source.is_active);
 
 --Create the categories Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.categories`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.categories`
 (
     category_id INT64,
     name STRING,
@@ -162,10 +162,10 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.categories`
 );
 
 --Truncate table
-TRUNCATE TABLE `x-signifier-461105-s6.silver.categories`;
+TRUNCATE TABLE `<YOUR-PROJECT-ID>.silver.categories`;
 
 --Insert New or Updated Records
-INSERT INTO `x-signifier-461105-s6.silver.categories`
+INSERT INTO `<YOUR-PROJECT-ID>.silver.categories`
 SELECT 
   *,
   CASE 
@@ -173,10 +173,10 @@ SELECT
     ELSE FALSE
   END AS is_quarantined
   
-FROM `x-signifier-461105-s6.bronze.categories`;
+FROM `<YOUR-PROJECT-ID>.bronze.categories`;
 
 --Create the products Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.products`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.products`
 (
   product_id INT64,
   name STRING,
@@ -187,10 +187,10 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.products`
 );
 
 --Truncate table
-TRUNCATE TABLE `x-signifier-461105-s6.silver.products`;
+TRUNCATE TABLE `<YOUR-PROJECT-ID>.silver.products`;
 
 --Insert New or Updated Records
-INSERT INTO `x-signifier-461105-s6.silver.products`
+INSERT INTO `<YOUR-PROJECT-ID>.silver.products`
 SELECT 
   *,
   CASE 
@@ -198,10 +198,10 @@ SELECT
     ELSE FALSE
   END AS is_quarantined
   
-FROM `x-signifier-461105-s6.bronze.products`;
+FROM `<YOUR-PROJECT-ID>.bronze.products`;
 -------------------------------------------------------------------------------------------------------------
 --Create the product_supplier Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.product_suppliers`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.product_suppliers`
 (
     supplier_id INT64,
     product_id INT64,
@@ -213,14 +213,14 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.product_suppliers`
 );
 
 --Update Existing Active Records if There Are Changes
-MERGE INTO `x-signifier-461105-s6.silver.product_suppliers` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.product_suppliers` target
 USING 
   (SELECT 
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.product_suppliers`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.product_suppliers`) source
 ON target.supplier_id = source.supplier_id 
    AND target.product_id = source.product_id 
    AND target.is_active = true
@@ -234,14 +234,14 @@ WHEN MATCHED AND
         target.effective_end_date = current_timestamp();
 
 --Insert New or Updated Records
-MERGE INTO `x-signifier-461105-s6.silver.product_suppliers` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.product_suppliers` target
 USING 
   (SELECT 
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.product_suppliers`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.product_suppliers`) source
 ON target.supplier_id = source.supplier_id 
    AND target.product_id = source.product_id 
    AND target.is_active = true
@@ -251,7 +251,7 @@ WHEN NOT MATCHED THEN
 
 
 --Create the suppliers Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.suppliers`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.suppliers`
 (
   supplier_id INT64,
   supplier_name STRING,
@@ -266,10 +266,10 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.suppliers`
 );
 
 --Truncate table
-TRUNCATE TABLE `x-signifier-461105-s6.silver.suppliers`;
+TRUNCATE TABLE `<YOUR-PROJECT-ID>.silver.suppliers`;
 
 --Insert New or Updated Records
-INSERT INTO `x-signifier-461105-s6.silver.suppliers`
+INSERT INTO `<YOUR-PROJECT-ID>.silver.suppliers`
 SELECT 
   *,
   CASE 
@@ -277,12 +277,12 @@ SELECT
     ELSE FALSE
   END AS is_quarantined
   
-FROM `x-signifier-461105-s6.bronze.suppliers`;
+FROM `<YOUR-PROJECT-ID>.bronze.suppliers`;
 
 -------------------------------------------------------------------------------------------------------------
 
 --Create the customer_reviews Table in the Silver Layer
-CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.customer_reviews`
+CREATE TABLE IF NOT EXISTS `<YOUR-PROJECT-ID>.silver.customer_reviews`
 (
     id STRING,
     customer_id INT64,
@@ -296,14 +296,14 @@ CREATE TABLE IF NOT EXISTS `x-signifier-461105-s6.silver.customer_reviews`
 );
 
 --Update Existing Active Records if There Are Changes
-MERGE INTO `x-signifier-461105-s6.silver.customer_reviews` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.customer_reviews` target
 USING 
   (SELECT 
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.customer_reviews`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.customer_reviews`) source
 ON target.id = source.id AND target.is_active = true
 WHEN MATCHED AND 
             (
@@ -318,14 +318,14 @@ WHEN MATCHED AND
         target.effective_end_date = current_timestamp();
 
 --Insert New or Updated Records
-MERGE INTO `x-signifier-461105-s6.silver.customer_reviews` target
+MERGE INTO `<YOUR-PROJECT-ID>.silver.customer_reviews` target
 USING 
   (SELECT 
     *, 
     CURRENT_TIMESTAMP() AS effective_start_date,
     CURRENT_TIMESTAMP() AS effective_end_date,
     TRUE AS is_active
-  FROM `x-signifier-461105-s6.bronze.customer_reviews`) source
+  FROM `<YOUR-PROJECT-ID>.bronze.customer_reviews`) source
 ON target.id = source.id AND target.is_active = true
 WHEN NOT MATCHED THEN 
     INSERT (id, customer_id, product_id, rating, review_text, review_date, effective_start_date, effective_end_date, is_active)
